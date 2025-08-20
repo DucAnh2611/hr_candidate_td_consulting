@@ -1,3 +1,26 @@
+import { useNavigate } from "react-router-dom";
+import RegisterForm from "../components/RegisterForm";
+import { ESimpleStateManagementContextDispatchType } from "../enums/context";
+import useSimpleStateManagement from "../hooks/useSimpleStateManagement";
+
 export default function Register() {
-  return <div></div>;
+  const navigate = useNavigate();
+  const { dispatch } = useSimpleStateManagement();
+
+  const onRegistered = () => {
+    if (!dispatch) return;
+    
+    dispatch({
+      type: ESimpleStateManagementContextDispatchType.UPDATE,
+      data: {
+        session: null,
+      },
+    });
+
+    navigate("/login");
+  }
+
+  return <div>
+    <RegisterForm onRegistered={onRegistered}/>
+  </div>;
 }
