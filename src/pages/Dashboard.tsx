@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import {
+  supabase,
   getCandidate,
   registerRealTimeCandidateChangesChannel,
   signOut,
@@ -27,7 +28,7 @@ export default function Dashboard() {
       const { data, error, count } = await getCandidate({ page, size });
 
       if (!error && data) {
-        updateState({ candidates: data, total: count });
+        updateState({ candidates: data, total: count, editCandidate: null });
       }
     } catch {
       console.error("Loading candidate error!");
@@ -87,6 +88,8 @@ export default function Dashboard() {
   }, [searchParams]);
 
   useEffect(() => {
+    if (!state.session) return;
+
     if (state.page <= 0 || state.page <= 0) return;
 
     fetchData(state.page, state.size);
@@ -115,7 +118,9 @@ export default function Dashboard() {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       channel?.unsubscribe();
     };
-  }, [state.page, state.size]);
+  }, [state.page, state.size, state.session]);
+
+  document.title = 'Dashboard';
 
   return (
     <main className="min-h-screen bg-gray-50">

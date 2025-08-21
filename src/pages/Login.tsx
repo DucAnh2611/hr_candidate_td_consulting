@@ -21,6 +21,8 @@ export default function Login() {
     navigate('/');
   }
 
+  document.title = 'Login';
+  
   return <div>
     <LoginForm onSignedIn={onSignedIn}/>
   </div>;

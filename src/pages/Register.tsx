@@ -19,6 +19,8 @@ export default function Register() {
 
     navigate("/login");
   }
+  
+  document.title = 'Register new account';
 
   return <div>
     <RegisterForm onRegistered={onRegistered}/>
