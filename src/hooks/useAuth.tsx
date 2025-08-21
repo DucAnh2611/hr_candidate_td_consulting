@@ -9,7 +9,7 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
 
   const setSession = (session: Session | null) => {
-    if (!dispatch || !session) return;
+    if (!dispatch) return;
 
     dispatch({
       type: ESimpleStateManagementContextDispatchType.UPDATE,
