@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import {
-  supabase,
   getCandidate,
   registerRealTimeCandidateChangesChannel,
   signOut,
@@ -13,6 +12,7 @@ import CandidateTable from "../components/CandidateTable";
 import CandidateForm from "../components/CandidateForm";
 import { ECandidateStatusEnum } from "../enums/candidate";
 import ModalChangeStatus from "../components/ModalChangeStatus";
+import type { RealtimeChannel } from "@supabase/supabase-js";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -91,15 +91,31 @@ export default function Dashboard() {
 
     fetchData(state.page, state.size);
 
-    const channel = registerRealTimeCandidateChangesChannel(() => {
-      onPagination(1, state.size);
-      fetchData(1, state.size);
-    });
+    let channel: RealtimeChannel | null = null;
+
+    const subscribe = () => {
+      channel = registerRealTimeCandidateChangesChannel(() => {
+        onPagination(1, state.size);
+        fetchData(1, state.size);
+      });
+    };
+
+    subscribe();
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        channel?.unsubscribe();
+        subscribe();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
-      supabase.removeChannel(channel);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      channel?.unsubscribe();
     };
-  }, [state.page, state.size, state.session]);
+  }, [state.page, state.size]);
 
   return (
     <main className="min-h-screen bg-gray-50">
