@@ -36,7 +36,7 @@ export function registerRealTimeCandidateChangesChannel(onChange: () => void) {
     .channel(SPB_REALTIME_CHANNELS.candidate)
     .on(
       "postgres_changes",
-      { event: "*", schema: "public", table: "candidates" },
+      { event: "*", schema: "public", table: SPB_TABLES.candidate },
       () => {
         onChange();
       }
@@ -93,7 +93,7 @@ export async function createCandidate(candidateData: TCandidateFormData) {
 }
 
 export async function uploadResume(file: File) {
-  const filePath = `resumes/${file.name}`;
+  const filePath = `resumes/${Date.now()}_${file.name}`;
 
   const { error } = await supabase.storage
     .from(SPB_BUCKET_STORAGE.resume)
@@ -106,4 +106,28 @@ export async function uploadResume(file: File) {
   } = supabase.storage.from(SPB_BUCKET_STORAGE.resume).getPublicUrl(filePath);
 
   return publicUrl;
+}
+
+export async function updateCandidate(
+  candidateId: string,
+  data: Partial<TCandidate>
+) {
+  try {
+    const { data: updated, error } = await supabase
+      .from(SPB_TABLES.candidate)
+      .update(data)
+      .eq("id", candidateId)
+      .select();
+
+    if (error) throw error;
+    if (!updated || updated.length === 0)
+      throw new Error("Candidate not found or not updated");
+
+    return { data: updated[0], error: null };
+  } catch (err: any) {
+    return {
+      data: null,
+      error: err.message,
+    };
+  }
 }

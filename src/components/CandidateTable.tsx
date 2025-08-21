@@ -8,7 +8,7 @@ type TCandidateTableProps = {
   size: number;
   isLoading: boolean;
   onPagination: (page: number, size: number) => void;
-  onChangeStatus: (candidate: TCandidate, status: ECandidateStatusEnum) => void;
+  onSelectChangeStatus: (candidate: TCandidate) => void;
 };
 
 function getStatusColor(status: ECandidateStatusEnum) {
@@ -26,82 +26,6 @@ function getStatusColor(status: ECandidateStatusEnum) {
   }
 }
 
-const columns = [
-  {
-    key: "id",
-    header: "ID",
-    render: (c: TCandidate) => (
-      <span className="font-mono text-sm" title={c.id}>
-        {c.id.slice(0, 8)}...
-      </span>
-    ),
-  },
-  {
-    key: "full_name",
-    header: "Full Name",
-    render: (c: TCandidate) => (
-      <span className="font-medium">{c.full_name}</span>
-    ),
-  },
-  {
-    key: "applied_position",
-    header: "Applied Position",
-    render: (c: TCandidate) => <span>{c.applied_position}</span>,
-  },
-  {
-    key: "status",
-    header: "Status",
-    render: (c: TCandidate) => (
-      <span
-        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(
-          c.status
-        )}`}
-      >
-        {c.status}
-      </span>
-    ),
-  },
-  {
-    key: "resume_url",
-    header: "Resume",
-    render: (c: TCandidate) => (
-      <a
-        href={c.resume_url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-      >
-        <svg
-          className="h-4 w-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-          />
-        </svg>
-        View Resume
-      </a>
-    ),
-  },
-  {
-    key: "created_at",
-    header: "Created At",
-    render: (c: TCandidate) =>
-      new Date(c.created_at).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-  },
-];
-
 export default function CandidateTable({
   candidates,
   page,
@@ -109,8 +33,93 @@ export default function CandidateTable({
   total,
   isLoading,
   onPagination,
-  onChangeStatus,
+  onSelectChangeStatus
 }: TCandidateTableProps) {
+  const columns = [
+    {
+      key: "id",
+      header: "ID",
+      render: (c: TCandidate) => (
+        <span className="font-mono text-sm" title={c.id}>
+          {c.id.slice(0, 8)}...
+        </span>
+      ),
+    },
+    {
+      key: "full_name",
+      header: "Full Name",
+      render: (c: TCandidate) => (
+        <span className="font-medium">{c.full_name}</span>
+      ),
+    },
+    {
+      key: "applied_position",
+      header: "Applied Position",
+      render: (c: TCandidate) => <span>{c.applied_position}</span>,
+    },
+    {
+      key: "status",
+      header: "Status",
+      render: (c: TCandidate) => (
+        <div className="flex items-center gap-2">
+          <span
+            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(
+              c.status
+            )}`}
+          >
+            {c.status}
+          </span>
+
+          <button
+            onClick={() => onSelectChangeStatus(c)}
+            className="text-xs text-blue-600 hover:underline"
+          >
+            Change
+          </button>
+        </div>
+      ),
+    },
+    {
+      key: "resume_url",
+      header: "Resume",
+      render: (c: TCandidate) => (
+        <a
+          href={c.resume_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+        >
+          <svg
+            className="h-4 w-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+            />
+          </svg>
+          View Resume
+        </a>
+      ),
+    },
+    {
+      key: "created_at",
+      header: "Created At",
+      render: (c: TCandidate) =>
+        new Date(c.created_at).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+    },
+  ];
+
   const totalPages = Math.ceil(total / size);
 
   return (

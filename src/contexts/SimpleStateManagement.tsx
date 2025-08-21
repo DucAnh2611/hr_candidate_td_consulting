@@ -15,6 +15,7 @@ const initialState: ISimpleStateManagementContextState = {
   isCallingCandidate: false,
   page: -1,
   size: -1,
+  editCandidate: null,
 };
 
 export const SimpleStateManagementContext =

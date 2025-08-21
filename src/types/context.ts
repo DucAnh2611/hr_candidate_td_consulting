@@ -17,6 +17,7 @@ export interface ISimpleStateManagementContextState {
   isCallingCandidate: boolean;
   page: number;
   size: number;
+  editCandidate: TCandidate | null;
 }
 
 export interface ISimpleStateManagementContextDispatchPayload {

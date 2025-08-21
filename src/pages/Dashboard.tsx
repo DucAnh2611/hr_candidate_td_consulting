@@ -4,6 +4,7 @@ import {
   getCandidate,
   registerRealTimeCandidateChangesChannel,
   signOut,
+  updateCandidate,
 } from "../api";
 import useSimpleStateManagement from "../hooks/useSimpleStateManagement";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -11,6 +12,7 @@ import type { TCandidate } from "../types";
 import CandidateTable from "../components/CandidateTable";
 import CandidateForm from "../components/CandidateForm";
 import { ECandidateStatusEnum } from "../enums/candidate";
+import ModalChangeStatus from "../components/ModalChangeStatus";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -25,7 +27,7 @@ export default function Dashboard() {
       const { data, error, count } = await getCandidate({ page, size });
 
       if (!error && data) {
-        setCandidate(data, count);
+        updateState({ candidates: data, total: count });
       }
     } catch {
       console.error("Loading candidate error!");
@@ -35,27 +37,16 @@ export default function Dashboard() {
   };
 
   const setLoadingList = (loading: boolean) => {
-    updateState({
-      isLoadingCandidate: loading,
-    });
+    updateState({ isLoadingCandidate: loading });
   };
 
   const setOpenCreateCandidateForm = (open: boolean) => {
-    updateState({
-      openCreateCandidateForm: open,
-    });
+    updateState({ openCreateCandidateForm: open });
   };
 
-  const setCandidate = (candidates: TCandidate[], total: number) => {
-    updateState({
-      candidates,
-      total,
-    });
-  };
-
-  const handleLogout =async  () => {
+  const handleLogout = async () => {
     await signOut();
-    navigate("/login");
+    navigate("login");
   };
 
   const onPagination = (page: number, size: number) => {
@@ -69,10 +60,24 @@ export default function Dashboard() {
     });
   };
 
-  const onChangeStatus = (
+  const onSelectChangeStatus = (candidate: TCandidate) => {
+    updateState({ editCandidate: candidate });
+  };
+
+  const onCancelChangeStatus = () => {
+    updateState({ editCandidate: null });
+  };
+
+  const onChangeStatus = async (
     candidate: TCandidate,
     status: ECandidateStatusEnum
-  ) => {};
+  ) => {
+    const { error } = await updateCandidate(candidate.id, { status });
+
+    if (!error) {
+      updateState({ editCandidate: null });
+    } 
+  };
 
   useEffect(() => {
     const pageParam = parseInt(searchParams.get("page") || `${1}`, 10);
@@ -94,7 +99,7 @@ export default function Dashboard() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [state.page, state.size]);
+  }, [state.page, state.size, state.session]);
 
   return (
     <main className="min-h-screen bg-gray-50">
@@ -159,7 +164,7 @@ export default function Dashboard() {
               size={state.size}
               isLoading={state.isLoadingCandidate}
               onPagination={onPagination}
-              onChangeStatus={onChangeStatus}
+              onSelectChangeStatus={onSelectChangeStatus}
             />
           </div>
 
@@ -169,6 +174,14 @@ export default function Dashboard() {
           />
         </div>
       </div>
+
+      {state.editCandidate && (
+        <ModalChangeStatus
+          candidate={state.editCandidate}
+          onCancel={onCancelChangeStatus}
+          onUpdate={onChangeStatus}
+        />
+      )}
     </main>
   );
 }
