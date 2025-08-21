@@ -6,7 +6,16 @@ import type {
 } from "../types";
 import { ESimpleStateManagementContextDispatchType } from "../enums/context";
 
-const initialState: ISimpleStateManagementContextState = {};
+const initialState: ISimpleStateManagementContextState = {
+  candidates: [],
+  total: 0,
+  session: null,
+  openCreateCandidateForm: false,
+  isLoadingCandidate: true,
+  isCallingCandidate: false,
+  page: -1,
+  size: -1,
+};
 
 export const SimpleStateManagementContext =
   createContext<ISimpleStateManagementContext>({

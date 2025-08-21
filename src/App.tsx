@@ -9,7 +9,7 @@ function App() {
   return (
     <Routes>
       <Route element={<PrivateRoute />}>
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/" element={<Dashboard />} />
       </Route>
       <Route element={<PublicRoute />}>
         <Route path="/login" element={<Login />} />

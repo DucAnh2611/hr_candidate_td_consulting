@@ -1,8 +1,10 @@
 import { useContext } from "react";
-import {
-  SimpleStateManagementContext,
-} from "../contexts/SimpleStateManagement";
-import type { ISimpleStateManagementContext } from "../types";
+import { SimpleStateManagementContext } from "../contexts/SimpleStateManagement";
+import type {
+  ISimpleStateManagementContext,
+  ISimpleStateManagementContextState,
+} from "../types";
+import { ESimpleStateManagementContextDispatchType } from "../enums/context";
 
 export default function useSimpleStateManagement() {
   const contextValue = useContext<ISimpleStateManagementContext>(
@@ -12,5 +14,14 @@ export default function useSimpleStateManagement() {
   if (!contextValue)
     throw new Error("Uninitialise Simple State Management Provider");
 
-  return contextValue;
+  const updateState = (data: Partial<ISimpleStateManagementContextState>) => {
+    if (!contextValue.dispatch) return;
+
+    contextValue.dispatch({
+      type: ESimpleStateManagementContextDispatchType.UPDATE,
+      data,
+    });
+  };
+
+  return { ...contextValue, updateState };
 }

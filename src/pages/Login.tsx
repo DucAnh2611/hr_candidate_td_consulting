@@ -15,7 +15,6 @@ export default function Login() {
       type: ESimpleStateManagementContextDispatchType.UPDATE,
       data: {
         session: authData.session,
-        user: authData.user,
       },
     });
 
