@@ -2,8 +2,8 @@ import { Route, Routes } from "react-router-dom";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Register from "./pages/Register";
-import { PrivateRoute } from "./components/PrivateRoute";
-import { PublicRoute } from "./components/PublicRoute";
+import { PrivateRoute } from "./components/private-route";
+import { PublicRoute } from "./components/public-route";
 
 function App() {
   return (

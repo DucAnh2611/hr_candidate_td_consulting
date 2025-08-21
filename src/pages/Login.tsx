@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import LoginForm from "../components/LoginForm";
+import LoginForm from "../components/login-form";
 import { ESimpleStateManagementContextDispatchType } from "../enums/context";
 import useSimpleStateManagement from "../hooks/useSimpleStateManagement";
 import type { TAuthData } from "../types";
@@ -22,7 +22,7 @@ export default function Login() {
   }
 
   document.title = 'Login';
-  
+
   return <div>
     <LoginForm onSignedIn={onSignedIn}/>
   </div>;

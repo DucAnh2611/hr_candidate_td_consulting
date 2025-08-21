@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import {
-  supabase,
   getCandidate,
   registerRealTimeCandidateChangesChannel,
   signOut,
@@ -9,10 +8,10 @@ import {
 import useSimpleStateManagement from "../hooks/useSimpleStateManagement";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import type { TCandidate } from "../types";
-import CandidateTable from "../components/CandidateTable";
-import CandidateForm from "../components/CandidateForm";
+import CandidateTable from "../components/candidate-table";
+import CandidateForm from "../components/candidate-form";
 import { ECandidateStatusEnum } from "../enums/candidate";
-import ModalChangeStatus from "../components/ModalChangeStatus";
+import ModalChangeStatus from "../components/modal-change-status";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 
 export default function Dashboard() {

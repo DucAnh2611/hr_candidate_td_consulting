@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import RegisterForm from "../components/RegisterForm";
+import RegisterForm from "../components/register-form";
 import { ESimpleStateManagementContextDispatchType } from "../enums/context";
 import useSimpleStateManagement from "../hooks/useSimpleStateManagement";
 
