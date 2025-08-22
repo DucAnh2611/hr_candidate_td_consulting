@@ -87,12 +87,10 @@ export default function Dashboard() {
   }, [searchParams]);
 
   useEffect(() => {
-    if (!state.session) return;
-
-    if (state.page <= 0 || state.page <= 0) return;
-
     fetchData(state.page, state.size);
+  }, [state.page, state.size]);
 
+  useEffect(() => {
     let channel: RealtimeChannel | null = null;
 
     const subscribe = () => {
@@ -117,7 +115,7 @@ export default function Dashboard() {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       channel?.unsubscribe();
     };
-  }, [state.page, state.size, state.session]);
+  }, [state.session, state.candidates])
 
   document.title = 'Dashboard';
 
