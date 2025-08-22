@@ -13,8 +13,8 @@ const initialState: ISimpleStateManagementContextState = {
   openCreateCandidateForm: false,
   isLoadingCandidate: true,
   isCallingCandidate: false,
-  page: -1,
-  size: -1,
+  page: 1,
+  size: 10,
   editCandidate: null,
 };
 

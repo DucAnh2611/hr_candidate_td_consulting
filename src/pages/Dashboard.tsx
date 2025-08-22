@@ -87,10 +87,6 @@ export default function Dashboard() {
   }, [searchParams]);
 
   useEffect(() => {
-    if (!state.session) return;
-
-    if (state.page <= 0 || state.page <= 0) return;
-
     fetchData(state.page, state.size);
 
     let channel: RealtimeChannel | null = null;
